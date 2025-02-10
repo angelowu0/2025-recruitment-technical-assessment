@@ -122,6 +122,7 @@ describe("Task 3", () => {
       expect(resp.status).toBe(200);
 
       const resp2 = await getTask3("beef");
+      console.log(resp2)
       expect(resp2.status).toBe(400);
     });
 
@@ -155,7 +156,89 @@ describe("Task 3", () => {
       expect(resp2.status).toBe(200);
 
       const resp3 = await getTask3("Skibidi");
+
       expect(resp3.status).toBe(200);
+      console.log(resp3.body)
+    });
+
+    it.only("The example on the website", async () => {
+        const spag = {
+          type: "recipe",
+          name: "Skibidi Spaghetti",
+          requiredItems: [
+            {
+              name: "Meatball",
+              quantity: 3
+            },
+            {
+              name: "Pasta",
+              quantity: 1
+            },
+            {
+              name: "Tomato",
+              quantity: 2
+            }
+          ]
+        };
+        await postEntry(spag);
+        const meatball = {
+          type: "recipe",
+          name: "Meatball",
+          requiredItems: [
+            {
+              name: "Beef",
+              quantity: 2
+            },
+            {
+              name: "Egg",
+              quantity: 1
+            }
+          ]
+        };
+        await postEntry(meatball);
+        const past = {
+          type: "recipe",
+          name: "Pasta",
+          requiredItems: [
+            {
+              name: "Flour",
+              quantity: 3
+            },
+            {
+              name: "Egg",
+              quantity: 1
+            }
+          ]
+        };
+        await postEntry(past);
+        const beef = {
+            type: "ingredient",
+            name: "Beef",
+            cookTime: 5
+        };
+        await postEntry(beef);
+        const egg = {
+            type: "ingredient",
+            name: "Egg",
+            cookTime: 3
+        };
+        await postEntry(egg);
+        const flour = {
+            type: "ingredient",
+            name: "Flour",
+            cookTime: 0
+        };
+        await postEntry(flour);
+        const tomato = {
+            type: "ingredient",
+            name: "Tomato",
+            cookTime: 2
+        };
+        await postEntry(tomato);
+        const resp3 = await getTask3("Skibidi Spaghetti");
+
+          expect(resp3.status).toBe(200);
+          console.log(resp3.body)
     });
   });
 });
