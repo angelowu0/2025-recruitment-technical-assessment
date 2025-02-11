@@ -197,6 +197,11 @@ def summary():
 
 
 def create_summary(name: str) -> Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]:
+	"""
+	Creates a summary for a recipe
+	:param name: Name of recipe
+	:return: Summary in format given in readme
+	"""
 	entry = find_cookbook_entry(name)
 
 	if type(entry) == Ingredient:
@@ -215,6 +220,14 @@ def create_summary(name: str) -> Dict[str, Union[str, int, List[Dict[str, Union[
 
 
 def do_recipe_simplify(entry: CookbookEntry, quantity: int) -> Dict[str, Union[int, Dict[str, int]]]:
+	"""
+	Recursively simplifies a recipe into its ingredients
+	:param entry: CookbookEntry of any type
+	:param quantity: Quantity of entry's base ingredients to be multiplied by
+	:return: name, cook time and ingredients dictionary
+	"""
+
+	# Base case, entry is an ingredient
 	if type(entry) == Ingredient:
 		cookbook_entry = find_cookbook_entry(entry.name)
 
@@ -225,8 +238,11 @@ def do_recipe_simplify(entry: CookbookEntry, quantity: int) -> Dict[str, Union[i
 			'cook_time': getattr(cookbook_entry, "cook_time") * quantity,
 			'ingredients': {cookbook_entry.name: quantity}
 		}
+
 	ingredients: Dict[str, int] = {}
 	cook_time = 0
+
+	# Goes through every item in entry's required items and adds its ingredients and cooktime
 	for item in getattr(entry, "required_items"):
 		cookbook_entry = find_cookbook_entry(item.name)
 		temp_summary = do_recipe_simplify(cookbook_entry, item.quantity)
@@ -248,7 +264,12 @@ def combine_required_item_dicts(dict_a: Dict[str, int], dict_b: Dict[str, int]) 
 		dict_a[item] = dict_a.get(item, 0) + dict_b[item]
 
 
-def find_cookbook_entry(name: str):
+def find_cookbook_entry(name: str) -> CookbookEntry:
+	"""
+	Finds a cookbook entry given its name
+	:param name: string of the cookbook entry name
+	:return: CookBookEntry corresponding to name
+	"""
 	for entry in cookbook:
 		if getattr(entry, "name") == name:
 			return entry
